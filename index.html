@@ -1,7 +1,92 @@
-<!DOCTYPE html><script>window.onload = function() {
-  let cookie = document.cookie;
-  if (cookie==''){
-  let url prompt('Please enter the webpage you would like to visit everytime you go to this page','mangopi.xyz';}
-  document.cookie = url;
-  else{window.open(cookie, "_self");}}
-</script>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Redirector</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+        .container {
+            text-align: center;
+        }
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>URL Redirector</h1>
+        <input type="text" id="urlInput" placeholder="Enter the URL here">
+        <br>
+        <button onclick="redirectToURL()">Go</button>
+    </div>
+
+    <script>
+        // Function to set a cookie
+        function setCookie(name, value, days) {
+            const d = new Date();
+            d.setTime(d.getTime() + (days*24*60*60*1000));
+            const expires = "expires="+ d.toUTCString();
+            document.cookie = name + "=" + value + ";" + expires + ";path=/";
+        }
+
+        // Function to get a cookie
+        function getCookie(name) {
+            const cname = name + "=";
+            const decodedCookie = decodeURIComponent(document.cookie);
+            const ca = decodedCookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(cname) == 0) {
+                    return c.substring(cname.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        // Function to redirect to the URL entered by the user
+        function redirectToURL() {
+            // Get the URL entered by the user
+            const url = document.getElementById('urlInput').value;
+
+            // Check if the URL is not empty
+            if (url) {
+                // Set the cookie with the URL, expiring in 30 days
+                setCookie('redirectURL', url, 30);
+
+                // Redirect the user to the entered URL
+                window.location.href = url;
+            } else {
+                alert('Please enter a valid URL.');
+            }
+        }
+
+        // On page load, check for the redirect cookie
+        window.onload = function() {
+            const redirectURL = getCookie('redirectURL');
+            if (redirectURL) {
+                window.location.href = redirectURL;
+            }
+        }
+    </script>
+</body>
+</html>
